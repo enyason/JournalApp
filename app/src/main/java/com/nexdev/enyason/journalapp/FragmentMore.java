@@ -72,6 +72,8 @@ public class FragmentMore extends Fragment {
 
 
     int count = 0;
+    String email = "";
+
     private GoogleSignInClient mGoogleSignInClient;
 
 
@@ -125,10 +127,11 @@ public class FragmentMore extends Fragment {
 
         user = firebaseAuth.getCurrentUser();
 
+
         if (user != null) {
             String name = user.getDisplayName();
             Uri url = user.getPhotoUrl();
-            String email = user.getEmail();
+             email= user.getEmail();
 
             textViewUserName.setText(name);
             textViewUserEmail.setText(email);
@@ -228,7 +231,7 @@ public class FragmentMore extends Fragment {
 
 
                 firebaseFirestore.collection("Journal").document("users")
-                        .collection("enyasonjnr@gmail.com")
+                        .collection(email)
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -298,7 +301,7 @@ public class FragmentMore extends Fragment {
 
 
                         firebaseFirestore.collection("Journal").document("users")
-                                .collection("enyasonjnr@gmail.com").add(objectMap)
+                                .collection(email).add(objectMap)
                                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentReference> task) {

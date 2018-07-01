@@ -11,14 +11,14 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        app:title="Courses Enrolled"></android.support.v7.widget.Toolbar>
+        app:title="My Favourite"></android.support.v7.widget.Toolbar>
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_favourite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tool_bar_home">
+        android:layout_below="@id/tool_bar_favourite">
 
     </android.support.v7.widget.RecyclerView>>
 

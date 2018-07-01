@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tool_bar_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:title="Journal Entries"></android.support.v7.widget.Toolbar>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_journal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tool_bar_home">
+
+    </android.support.v7.widget.RecyclerView>>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_journal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_create" />
+
+    <TextView
+        android:visibility="invisible"
+
+        android:layout_centerInParent="true"
+        android:id="@+id/tv_empty_state"
+        android:layout_width="wrap_content"
+        android:text="No Journal Added"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>

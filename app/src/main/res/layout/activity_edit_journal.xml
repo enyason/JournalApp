@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nexdev.enyason.journalapp.EditJournalActivity">
+
+    <RelativeLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <ImageView
+            android:id="@+id/image_view_display_edit"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerInside"
+            android:src="@color/demo_orange" />
+
+        <ImageView
+            android:id="@+id/image_view_select_image_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:src="@drawable/ic_add_a_photo" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/layout1"
+        android:layout_margin="20dp">
+
+
+        <TextView
+            android:id="@+id/tv_time_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:fontFamily="sans-serif"
+            android:text="11:28 pm"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_day_number_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="02"
+            android:textColor="@color/colorPrimary"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_favorite"
+            android:id="@+id/image_view_fav"
+            android:layout_below="@id/tv_time_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/tv_day_number_edit"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_day_text_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="Saturday"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_month_year_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="June 2018"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_below="@id/layout2"
+        android:layout_height="wrap_content">
+
+
+
+        <EditText
+            android:id="@+id/et_title_edit"
+            android:hint="Title"
+            android:justificationMode="inter_word"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <EditText
+
+            android:layout_below="@id/et_title_edit"
+            android:id="@+id/et_description_edit"
+            android:hint="enter your thought"
+            android:justificationMode="inter_word"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <Button
+            android:id="@+id/btn_update_journal"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorWhite"
+            android:background="#000"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/et_description_edit"
+            android:layout_width="100dp"
+            android:text="Update Journal"
+            android:textAllCaps="false"
+            android:layout_height="wrap_content" />
+
+
+
+
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

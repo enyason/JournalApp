@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -28,8 +30,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,9 +47,8 @@ import java.util.Map;
 public class FragmentMore extends Fragment {
 
 
-    LinearLayout layoutSync;
+    LinearLayout layoutUpload, layoutLogOut, layoutDelete, layoutRetrieve;
 
-    LinearLayout layoutLogOut;
 
     ProgressDialog dialogSync;
 
@@ -51,6 +56,7 @@ public class FragmentMore extends Fragment {
 
     AppDataBase appDataBase;
     List<Journal> journalList;
+    List<Journal> getJournalListCloud;
 
 
     FirebaseAuth firebaseAuth;
@@ -60,9 +66,12 @@ public class FragmentMore extends Fragment {
 
 
     ImageView imageViewUserImage;
-    TextView textViewUserName;
+    TextView textViewUserName, textViewUserEmail;
+
+    ProgressBar pbUpload, pbRetrive;
 
 
+    int count = 0;
     private GoogleSignInClient mGoogleSignInClient;
 
 
@@ -99,12 +108,19 @@ public class FragmentMore extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        layoutSync = view.findViewById(R.id.layout_sync);
+        layoutUpload = view.findViewById(R.id.layout_sync);
         layoutLogOut = view.findViewById(R.id.layout_log_out);
         dialogSync = new ProgressDialog(getActivity());
+        layoutDelete = view.findViewById(R.id.layout_delete);
+
+        layoutRetrieve = view.findViewById(R.id.layout_download);
 
         imageViewUserImage = view.findViewById(R.id.profile_image);
         textViewUserName = view.findViewById(R.id.textView_user_profile_name);
+        textViewUserEmail = view.findViewById(R.id.textView_user_email);
+
+        pbRetrive = view.findViewById(R.id.pb_retrieve);
+        pbUpload = view.findViewById(R.id.pb_download);
 
 
         user = firebaseAuth.getCurrentUser();
@@ -112,10 +128,12 @@ public class FragmentMore extends Fragment {
         if (user != null) {
             String name = user.getDisplayName();
             Uri url = user.getPhotoUrl();
+            String email = user.getEmail();
 
             textViewUserName.setText(name);
+            textViewUserEmail.setText(email);
 
-//            Picasso.get().load(url).fit().centerCrop().into(imageViewUserImage);
+            Glide.with(this).load(url).dontAnimate().placeholder(R.drawable.ic_person).into(imageViewUserImage);
 
 
         }
@@ -151,6 +169,31 @@ public class FragmentMore extends Fragment {
         });
 
 
+        layoutDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+
+                dialogSync.setMessage("Deleting Journals...");
+                dialogSync.show();
+
+                AppExecutor.getInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        appDataBase.taskDao().deleteAllJournal();
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialogSync.dismiss();
+                                Snackbar.make(v, "All Entries Deleted", Snackbar.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+
         layoutLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,7 +218,63 @@ public class FragmentMore extends Fragment {
         });
 
 
-        layoutSync.setOnClickListener(new View.OnClickListener() {
+        layoutRetrieve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+
+                getJournalListCloud = new ArrayList<>();
+
+                pbRetrive.setVisibility(View.VISIBLE);
+
+
+                firebaseFirestore.collection("Journal").document("users")
+                        .collection("enyasonjnr@gmail.com")
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        if (task.isSuccessful()) {
+
+
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+
+                                final String title = documentSnapshot.getString("title");
+                                final String description = documentSnapshot.getString("description");
+                                final String imageUri = documentSnapshot.getString("image");
+
+
+                                AppExecutor.getInstance().diskIO()
+                                        .execute(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                AppDataBase.getsInstance(getActivity()).taskDao()
+                                                        .insertJournal(new Journal(title, description, imageUri, 1, new Date()));
+
+                                            }
+                                        });
+//                                getJournalListCloud.add());
+
+                            }
+                            pbRetrive.setVisibility(View.INVISIBLE);
+
+                            Snackbar.make(v, "Download Complete", Snackbar.LENGTH_SHORT).show();
+
+
+                        } else {
+
+
+                        }
+
+
+                    }
+                });
+
+
+            }
+        });
+
+
+        layoutUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
 
@@ -183,46 +282,53 @@ public class FragmentMore extends Fragment {
                     return;
                 }
 
-                dialogSync.show();
+                pbUpload.setVisibility(View.VISIBLE);
+//                dialogSync.show();
 
 
-                for (int i = 0; i < journalList.size(); i++) {
+
+                    for (int i = 0; i < journalList.size(); i++) {
+
+                        Journal journal = journalList.get(i);
+                        Map<String, Object> objectMap = new HashMap<>();
+
+                        objectMap.put("title", journal.getTitle());
+                        objectMap.put("description", journal.getDescription());
+                        objectMap.put("image", journal.getImage());
 
 
-                    dialogSync.setMessage("Syncing With Cloud " + i + 1 + " of " + journalList.size() + 1);
+                        firebaseFirestore.collection("Journal").document("users")
+                                .collection("enyasonjnr@gmail.com").add(objectMap)
+                                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentReference> task) {
 
-                    Journal journal = journalList.get(i);
-                    Map<String, Object> objectMap = new HashMap<>();
+                                        count++;
 
-                    objectMap.put("title", journal.getTitle());
-                    objectMap.put("description", journal.getDescription());
-                    objectMap.put("image", journal.getImage());
+                                        if (task.isSuccessful()) {
 
 
-                    firebaseFirestore.collection("Journal").document("users")
-                            .collection("enyasonjnr@gmail.com").add(objectMap)
-                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentReference> task) {
-
-//                                    dialogSync.dismiss();
-//                                    if (task.isSuccessful()) {
+                                            if (count == journalList.size()) {
+                                                pbUpload.setVisibility(View.INVISIBLE);
+////
+                                                Snackbar.make(v, "Upload Complete", Snackbar.LENGTH_SHORT).show();
 //
-//                                        Snackbar.make(v, "Sync Complete", Snackbar.LENGTH_LONG).show();
-//                                    } else {
+                                            }
+                                        }
+
 //
-//                                        Snackbar.make(v, "Sync failed", Snackbar.LENGTH_LONG).show();
+
+                                    }
+                                });
+
+
 //
+
+
+                    }
+
 //
-//                                    }
 
-                                }
-                            });
-
-
-                }
-
-                dialogSync.dismiss();
 
 
             }

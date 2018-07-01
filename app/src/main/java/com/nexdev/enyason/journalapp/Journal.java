@@ -4,13 +4,14 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by enyason on 6/27/18.
  */
 @Entity(tableName = "Journal")
-public class Journal {
+public class Journal implements Serializable {
 
 
     @PrimaryKey(autoGenerate = true)

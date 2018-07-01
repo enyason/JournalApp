@@ -19,9 +19,10 @@ public abstract class AppDataBase extends RoomDatabase {
 
     public static final Object LOCK = new Object();
 
-    public static final String DATABASE_NAME = "journal_list";
+    public static final String DATABASE_NAME = MainActivity.email+"_journal_list";
 
     private static AppDataBase sInstance;
+
 
 
     public static AppDataBase getsInstance(Context context){
@@ -31,6 +32,7 @@ public abstract class AppDataBase extends RoomDatabase {
             synchronized (LOCK){
 
                 Log.d(LOG_TAG,"creating new database");
+                Log.i("DB",DATABASE_NAME);
 
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                         AppDataBase.class,AppDataBase.DATABASE_NAME)

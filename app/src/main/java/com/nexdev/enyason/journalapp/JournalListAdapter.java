@@ -17,6 +17,8 @@
 package com.nexdev.enyason.journalapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +29,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -67,7 +70,7 @@ public class JournalListAdapter extends RecyclerView.Adapter<JournalListAdapter.
     @Override
     public void onBindViewHolder(final TaskViewHolder holder, int position) {
         // Determine the values of the wanted data
-        Journal journalEntry = mJaournalEntries.get(position);
+        final Journal journalEntry = mJaournalEntries.get(position);
 
         String title = journalEntry.getTitle();
         String description = journalEntry.getDescription();
@@ -86,24 +89,16 @@ public class JournalListAdapter extends RecyclerView.Adapter<JournalListAdapter.
 
 
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//
-//
-//                Picasso.with(mContext).load(image).resize(120, 60).into(holder.itemImageView);
-//
-//            }
-//        });
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext,EditJournalActivity.class);
 
+                intent.putExtra("journal", journalEntry);
 
-//        Picasso.get().load(image).placeholder(R.mipmap.ic_row_image).into(holder.itemImageView, new Callback.EmptyCallback() {
-//            @Override public void onSuccess() {
-//                // Index 0 is the image view.
-////                animator.setDisplayedChild(0);
-//            }
-//        });
+                mContext.startActivity(intent);
+            }
+        });
 
 
     }
@@ -147,7 +142,7 @@ public class JournalListAdapter extends RecyclerView.Adapter<JournalListAdapter.
         ImageView itemImageView;
         TextView tvTitle;
 
-//        View view;
+        View view;
 
 
 
@@ -160,7 +155,7 @@ public class JournalListAdapter extends RecyclerView.Adapter<JournalListAdapter.
 
             itemImageView = itemView.findViewById(R.id.item_image_view);
             tvTitle = itemView.findViewById(R.id.tv_title);
-//            view = itemView;
+            view = itemView;
         }
 
 

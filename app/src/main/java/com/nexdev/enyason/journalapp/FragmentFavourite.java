@@ -77,6 +77,8 @@ public class FragmentFavourite extends Fragment {
             }
         });
 
+        recyclerView.setAdapter(adapter);
+
 
 
     }

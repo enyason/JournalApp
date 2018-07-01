@@ -87,9 +87,7 @@ public class JournalActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    public void checkFields(String title, String description) {
 
-    }
 
     @Override
     public void onClick(final View v) {
@@ -108,7 +106,7 @@ public class JournalActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
 
-        checkFields(title, description);
+
 
 //        if (TextUtils.isEmpty(title)) {
 //

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -19,7 +20,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     FirebaseAuth firebaseAuth;
 
+    FirebaseUser firebaseUser;
+
     FirebaseAuth.AuthStateListener authStateListener;
+
+    public static String email = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +33,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
 
-
-        loadFragment(new FragmentJournalEntry());
-
-
         firebaseAuth = FirebaseAuth.getInstance();
+
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser != null) {
+            email = firebaseAuth.getCurrentUser().getEmail();
+
+        }
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -44,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 }
             }
         };
+
+        loadFragment(new FragmentJournalEntry());
 
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view_home);

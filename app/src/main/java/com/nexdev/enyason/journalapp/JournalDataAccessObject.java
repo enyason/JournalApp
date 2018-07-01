@@ -37,6 +37,9 @@ public interface JournalDataAccessObject {
     @Delete
     void deleteJournal(Journal journal);
 
+    @Query("DELETE  FROM Journal")
+    void deleteAllJournal();
+
    @Query("SELECT * FROM Journal WHERE isFavourite = 1")
    LiveData<List<Journal>> getJournalByFav();
 

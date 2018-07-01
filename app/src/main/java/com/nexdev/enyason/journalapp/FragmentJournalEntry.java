@@ -35,6 +35,8 @@ public class FragmentJournalEntry extends Fragment {
 
     AppDataBase appDataBase;
 
+    LiveData<List<Journal>> journals;
+
     public FragmentJournalEntry() {
     }
 
@@ -58,7 +60,7 @@ public class FragmentJournalEntry extends Fragment {
 
         appDataBase = AppDataBase.getsInstance(getActivity());
 
-       LiveData<List<Journal>> journals =  appDataBase.taskDao().loadAllJournal();
+        journals =  appDataBase.taskDao().loadAllJournal();
 
 
         textViewEmptyState = view.findViewById(R.id.tv_empty_state);
@@ -86,8 +88,8 @@ public class FragmentJournalEntry extends Fragment {
             public void onChanged(@Nullable List<Journal> journals) {
 
 
-                if (journals  != null && journals.size() == 0 ) {
-                    textViewEmptyState.setVisibility(View.VISIBLE);
+                if (journals  != null && journals.size() > 0 ) {
+                    textViewEmptyState.setVisibility(View.INVISIBLE);
                 }
                 adapter.setJournal(journals);
 
@@ -99,5 +101,21 @@ public class FragmentJournalEntry extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
+//        journals.observe(getActivity(), new Observer<List<Journal>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Journal> journals) {
+//
+//                if (journals  != null && journals.size() == 0 ) {
+//                    textViewEmptyState.setVisibility(View.VISIBLE);
+//                }
+//
+//            }
+//        });
+
+
+    }
 }

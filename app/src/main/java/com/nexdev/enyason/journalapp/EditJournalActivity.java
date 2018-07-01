@@ -48,13 +48,13 @@ public class EditJournalActivity extends AppCompatActivity {
 
         buttonUpdate = findViewById(R.id.btn_update_journal);
 
-        imageViewOpenGallery = findViewById(R.id.image_view_select_image);
-        imageViewDisplay = findViewById(R.id.image_view_display);
-        imageView = findViewById(R.id.image_view_fav);
+        imageViewOpenGallery = findViewById(R.id.image_view_select_image_edit);
+        imageViewDisplay = findViewById(R.id.image_view_display_edit);
+        imageViewFav = findViewById(R.id.image_view_fav);
 
 
         Intent intent = getIntent();
-         Journal journal = (Journal) intent.getSerializableExtra("journal");
+         final Journal journal = (Journal) intent.getSerializableExtra("journal");
 
 
 
@@ -62,27 +62,30 @@ public class EditJournalActivity extends AppCompatActivity {
         editTextTitle.setText(journal.getTitle());
         editTextDescription.setText(journal.getDescription());
 
-        Glide.with(this).load(journal.getImage()).dontAnimate().into(imageView);
+        Log.i("Image ",image);
+
+        Glide.with(this).load(journal.getImage()).placeholder(R.color.demo_orange).dontAnimate().into(imageView);
 
 
         if (journal.isFavourite() == 1) {
-            imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_red));
+            imageViewFav.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_red));
             isFav = 1;
         } else {
+            imageViewFav.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite));
             isFav = 0;
         }
 
 
-        imageView.setOnClickListener(new View.OnClickListener() {
+        imageViewFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (isFav == 0) {
                     isFav = 1;
-                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_red));
+                    imageViewFav.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_red));
                 } else if (isFav == 1) {
                     isFav = 0;
-                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite));
+                    imageViewFav.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite));
 
                 }
 
@@ -95,14 +98,17 @@ public class EditJournalActivity extends AppCompatActivity {
             @Override
             public void onClick(final View v) {
 
-
-
                 Date date = new Date();
 
                String title = editTextTitle.getText().toString().trim();
                String description = editTextDescription.getText().toString().trim();
 
                final Journal journalUpdate = new Journal(title,description,image,isFav,date);
+
+               journalUpdate.setId(journal.getId());
+               journalUpdate.setImage(journal.getImage());
+
+
 
                 AppExecutor.getInstance().diskIO().execute(new Runnable() {
                     @Override

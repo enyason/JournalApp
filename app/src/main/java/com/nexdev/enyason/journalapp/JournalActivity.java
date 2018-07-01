@@ -30,7 +30,6 @@ public class JournalActivity extends AppCompatActivity implements View.OnClickLi
     ImageView imageViewOpenGallery;
     ImageView imageViewDisplay;
 
-    ViewAnimator animator;
     private String image = "";
 
 

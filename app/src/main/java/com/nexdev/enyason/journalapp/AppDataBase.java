@@ -19,7 +19,7 @@ public abstract class AppDataBase extends RoomDatabase {
 
     public static final Object LOCK = new Object();
 
-    public static final String DATABASE_NAME = MainActivity.email+"_journal_list";
+    public static final String DATABASE_NAME = "journal_list";
 
     private static AppDataBase sInstance;
 

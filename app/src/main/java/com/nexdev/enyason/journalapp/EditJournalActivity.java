@@ -156,6 +156,9 @@ public class EditJournalActivity extends AppCompatActivity {
     }
 
     private void loadImage() {
+
+        Glide.with(this).load(image).centerCrop().into(imageViewDisplay);
+
     }
 
 
@@ -181,7 +184,6 @@ public class EditJournalActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
             image = data.getData().toString();
-
             Log.i("Image", image);
             loadImage();
         } else {
